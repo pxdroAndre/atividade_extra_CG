@@ -1,5 +1,9 @@
 # Atividade: Conversão RGB para HSV (Versão Web)
 
+Dupla:
+- Pedro André da Silva Neto
+- Walter Soares Costa Neto
+
 Este projeto é uma aplicação web pura (HTML, CSS e JavaScript) desenvolvida para carregar uma imagem no formato RGB, convertê-la para o espaço de cores HSV e permitir a manipulação direta dos valores de Matiz, Saturação e Brilho.
 
 ## 🚀 Como Executar
