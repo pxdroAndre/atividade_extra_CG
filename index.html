@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor e Manipulador RGB para HSV</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Conversor e Manipulador RGB para HSV</h1>
+            <p>Envie uma imagem, ajuste os parâmetros HSV e entenda o funcionamento do algoritmo.</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <input type="file" id="imageInput" accept="image/*" class="file-input">
+                <label for="imageInput" class="upload-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    Escolher Imagem RGB
+                </label>
+            </div>
+
+            <div class="workspace" style="display: none;" id="workspace">
+                <div class="image-panels">
+                    <div class="panel">
+                        <h2>Imagem Original (RGB)</h2>
+                        <canvas id="canvasOriginal"></canvas>
+                    </div>
+                    <div class="panel">
+                        <h2>Imagem Modificada (HSV manipulado)</h2>
+                        <canvas id="canvasModified"></canvas>
+                    </div>
+                </div>
+
+                <div class="controls-card">
+                    <h3>Manipular Imagem (HSV)</h3>
+                    
+                    <div class="control-group">
+                        <label for="hueSlider">Ajuste de Matiz (Hue): <span id="hueVal">0</span>°</label>
+                        <input type="range" id="hueSlider" min="-180" max="180" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="satSlider">Ajuste de Saturação (Saturation): <span id="satVal">0</span>%</label>
+                        <input type="range" id="satSlider" min="-100" max="100" value="0">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="valSlider">Ajuste de Brilho (Value): <span id="valVal">0</span>%</label>
+                        <input type="range" id="valSlider" min="-100" max="100" value="0">
+                    </div>
+
+                    <button id="resetBtn" class="reset-btn">Resetar Manipulações</button>
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <h2>A Teoria: Parâmetros 0, 2 e 4 no cálculo do Hue (Matiz)</h2>
+                <div class="explanation-content">
+                    <p>No algoritmo de conversão do espaço de cores RGB para HSV, a componente <strong>Matiz (Hue)</strong> é calculada com base em qual dos três canais (R, G ou B) possui a intensidade máxima. O resultado é mapeado para um ângulo em um círculo cromático (ou hexágono) de 0° a 360°.</p>
+                    
+                    <p>Como o círculo tem 360 graus e temos 3 cores primárias e 3 secundárias principais, ele pode ser dividido em 6 segmentos de 60 graus. Os parâmetros <strong>0, 2 e 4</strong> atuam como "deslocamentos" (offsets) para definir em qual segmento do círculo a cor primária dominante está posicionada:</p>
+                    
+                    <ul>
+                        <li><span class="highlight red">Parâmetro 0:</span> Usado quando o canal <strong>Vermelho (Red)</strong> é o máximo. O vermelho é a cor base e fica na posição 0° do círculo cromático. A fórmula <code>(G - B) / Delta</code> ajusta a matiz suavemente ao redor de 0. O deslocamento é implicitamente <strong>0</strong>.</li>
+                        
+                        <li><span class="highlight green">Parâmetro 2:</span> Usado quando o canal <strong>Verde (Green)</strong> é o máximo. O verde puro está localizado a 120° no círculo cromático. Como a unidade da fórmula equivale a blocos de 60°, dividimos 120 / 60 e obtemos <strong>2</strong>. Assim, somamos 2 na fórmula <code>(B - R) / Delta + 2</code>.</li>
+                        
+                        <li><span class="highlight blue">Parâmetro 4:</span> Usado quando o canal <strong>Azul (Blue)</strong> é o máximo. O azul puro está localizado a 240° no círculo cromático. Dividindo 240 / 60, obtemos <strong>4</strong>. Por isso, somamos 4 na fórmula <code>(R - G) / Delta + 4</code>.</li>
+                    </ul>
+
+                    <p>No final do cálculo, o resultado é multiplicado por 60 para que a matiz final seja um ângulo entre 0 e 360 graus, representando o ponto exato da cor no círculo.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
