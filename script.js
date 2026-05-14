@@ -156,9 +156,19 @@ hueSlider.addEventListener('input', processImage);
 satSlider.addEventListener('input', processImage);
 valSlider.addEventListener('input', processImage);
 
+const saveBtn = document.getElementById('saveBtn');
+
 resetBtn.addEventListener('click', () => {
     hueSlider.value = 0;
     satSlider.value = 0;
     valSlider.value = 0;
     processImage();
+});
+
+saveBtn.addEventListener('click', () => {
+    if (!originalImageData) return;
+    const link = document.createElement('a');
+    link.download = 'imagem_hsv_modificada.png';
+    link.href = canvasModified.toDataURL('image/png');
+    link.click();
 });
