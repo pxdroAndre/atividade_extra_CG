@@ -1,32 +1,44 @@
-# Atividade: Conversão RGB para HSV (Versão Web)
+# RGB -> HSV (OpenGL + Python)
 
-Este projeto é uma aplicação web pura (HTML, CSS e JavaScript) desenvolvida para carregar uma imagem no formato RGB, convertê-la para o espaço de cores HSV e permitir a manipulação direta dos valores de Matiz, Saturação e Brilho.
+Este programa permite selecionar uma imagem RGB, converter para HSV e visualizar o resultado em uma janela OpenGL. Existem dois modos de visualizacao HSV:
 
-## 🚀 Como Executar
+- HSV para exibicao (convertido de volta para RGB): aparencia natural na tela.
+- HSV bruto (H,S,V mostrados como R,G,B): cores falsas para inspeção técnica dos canais.
 
-Por ser uma aplicação web baseada puramente no lado do cliente, você **não precisa instalar nada** (nem Python, nem Node.js, nem bibliotecas externas).
+## Como executar
 
-1. Extraia/Baixe os arquivos deste repositório.
-2. Dê um duplo clique no arquivo `index.html`.
-3. O projeto abrirá no seu navegador padrão (Google Chrome, Edge, Firefox, etc.).
-4. Clique em "Escolher Imagem RGB", selecione qualquer imagem do seu computador e brinque com os controles deslizantes.
+1) Crie/ative um ambiente Python (opcional, mas recomendado)
+2) Instale dependências:
 
-## 🛠️ Tecnologias Utilizadas
+```
+pip install -r requirements.txt
+```
 
-- **HTML5**: Estrutura da página.
-- **CSS3**: Estilização moderna e responsiva (Dark Mode).
-- **Vanilla JavaScript**: Lógica do algoritmo de conversão e manipulação dos pixels frame a frame usando a API do `<canvas>`.
+3) Rode o programa:
 
-## 📚 A Teoria: Parâmetros 0, 2 e 4 no cálculo do Hue (Matiz)
+```
+python main.py
+```
 
-Uma das exigências da atividade é compreender o uso matemático dos valores 0, 2 e 4. 
+## Controles
 
-No algoritmo de conversão do espaço de cores RGB para HSV, a componente **Matiz (Hue)** é calculada com base em qual dos três canais (R, G ou B) possui a intensidade máxima. O resultado é mapeado para um ângulo em um círculo cromático (ou hexágono) de 0° a 360°.
+- `o`: abrir imagem
+- `1`: visualizar RGB (original)
+- `2`: visualizar HSV convertido para RGB (cores naturais)
+- `3`: visualizar HSV bruto (canais H, S e V como cores falsas)
+- `s`: salvar a imagem HSV
+- `q` ou `Esc`: sair
 
-Como o círculo possui 360 graus e temos 3 cores primárias, ele é dividido matematicamente em 6 blocos/segmentos de 60 graus. Os parâmetros **0, 2 e 4** atuam como **deslocamentos (offsets)** para posicionar a cor no ponto correto do círculo:
+## Explicação dos parâmetros 0, 2 e 4 no Hue
 
-- **0 (Vermelho):** O canal vermelho fica na posição 0° do círculo cromático. A fórmula usa um deslocamento implícito de `+ 0`.
-- **2 (Verde):** O verde puro está localizado a 120° no círculo cromático. Como a unidade da fórmula matemática equivale a blocos de 60°, dividimos `120 / 60` e obtemos **2**. Assim, somamos `+ 2` na fórmula quando o Verde é a cor máxima.
-- **4 (Azul):** O azul puro está localizado a 240° no círculo. Seguindo a mesma lógica matemática de fatias de 60 graus, dividimos `240 / 60` e obtemos **4**. Assim, somamos `+ 4` na fórmula quando o Azul é o máximo.
+Na conversao RGB -> HSV, o valor de Hue (H) é calculado em setores de 60 graus, dependendo de qual canal (R, G ou B) é o máximo. O termo adicionado (0, 2 ou 4) desloca o Hue para o setor correto do círculo de cores:
 
-Ao final do cálculo, o resultado de toda a conta é multiplicado por 60 para que a matiz final seja mapeada exatamente para um ângulo de volta à escala de 360 graus.
+- **0**: quando o maximo é **R**. O Hue baseia-se em $(G - B) / \Delta$ e fica no setor [0, 60) graus.
+- **2**: quando o maximo é **G**. O Hue usa $(B - R) / \Delta$ e é deslocado para o setor [120, 180) graus.
+- **4**: quando o maximo é **B**. O Hue usa $(R - G) / \Delta$ e é deslocado para o setor [240, 300) graus.
+
+Onde $\Delta = max(R,G,B) - min(R,G,B)$. Esses deslocamentos garantem que o Hue percorra corretamente o círculo de cores (0 a 360 graus) ao mudar o canal dominante.
+
+## Referência
+
+https://embarcados.com.br/processamento-de-imagens-com-opencv-no-raspberry-pi-zero/
